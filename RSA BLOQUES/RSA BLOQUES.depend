@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1495685738 source:c:\users\alejandro\desktop\rsa bloques\main.cpp
+	<iostream>
+	"PRNG.h"
+	<NTL/ZZ.h>
+	<iostream>
+	<NTL/ZZ.h>
+	<string>
+	"RSA.h"
+	<time.h>
+
+1495681930 c:\users\alejandro\desktop\rsa bloques\include\rsa.h
+	<string>
+	<NTL/ZZ.h>
+	<vector>
+	<sstream>
+
+1495685769 source:c:\users\alejandro\desktop\rsa bloques\src\prng.cpp
+	"PRNG.h"
+	<iostream>
+	<time.h>
+	<vector>
+	<stdlib.h>
+	<math.h>
+
+1495685858 c:\users\alejandro\desktop\rsa bloques\include\prng.h
+	<vector>
+	<NTL/ZZ.h>
+
+1495681930 source:c:\users\alejandro\desktop\rsa bloques\src\rsa.cpp
+	"RSA.h"
+	"PRNG.h"
+	<iostream>
+	<string>
+	<sstream>
+	<NTL/ZZ.h>
+	"Funciones Matematicas.h"
+
+1495682235 c:\users\alejandro\desktop\rsa bloques\include\funciones matematicas.h
+	<vector>
+	<NTL/ZZ.h>
+
+1495682043 source:c:\users\alejandro\desktop\rsa bloques\src\funciones matematicas.cpp
+	"Funciones Matematicas.h"
+
