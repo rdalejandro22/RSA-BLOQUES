@@ -9,8 +9,8 @@ using namespace NTL;
 using namespace std;
 void RSA::generar_claves()
 {
-    ZZ p = ga(5,16,7,3);
-    ZZ q = ga(5,16,3,4);
+    p = ga(5,16,7,3);
+    q = ga(5,16,3,4);
     while(ProbPrime(p,10)!=1)
     {
         p = ga(5,16,7,3);
@@ -21,73 +21,107 @@ void RSA::generar_claves()
     }
     N = p * q;
     ZZ phi_N = (p - 1) * (q - 1);
-    ZZ e = ga(7,16,3,2);
+    e = ga(7,16,3,2);
     while(e > phi_N || euclides(e, phi_N) != 1)
     {
-        e = ga(700,1024,14,8);
+        e = ga(7,16,4,5);
     }
     cout <<"Clave publica: " << e << endl;
-    clave_publica = e;
-    clave_privada = inversa(clave_publica, phi_N);
-    cout << "Clave privada: " << clave_privada << endl;
+    d = inversa(e, phi_N);
+    cout << "Clave privada: " << d << endl;
     cout <<"N: " << N << endl;
 }
 RSA::RSA(ZZ e, ZZ n) //EMISOR
 {
-    clave_publica = e;
+    this->e = e;
     N = n;
 }
 RSA::RSA() //RECEPTOR
 {
     generar_claves();
 }
-void RSA::set_n(ZZ n)
+ZZ RSA::resto_chino(ZZ c)
 {
-    N = n;
+    ZZ P = p * q;
+    ZZ dp = modulo(d, p - 1);
+    ZZ dq = modulo(d, q - 1);
+    ZZ a_1 = potencia(modulo(c, p), dp, p);
+    ZZ a_2 = potencia(modulo(c, q), dq, q);
+    ZZ p_1 = P/p;
+    ZZ p_2 = P/q;
+    ZZ q_1 = inversa(p_1, p);
+    ZZ q_2 = inversa(p_2, q);
+    ZZ d_0 = modulo(modulo((a_1 * p_1 * q_1), P) + modulo((a_2 * p_2 * q_2), P), P);
+    return d_0;
 }
-void RSA::set_clave_privada(ZZ key)
+string RSA::cifrar(string mensaje)
 {
-    clave_privada = key;
-}
-ZZ RSA::get_N()
-{
-    return N;
-}
-ZZ RSA::get_clave_publica()
-{
-    return clave_publica;
-}
-std::string RSA::zToString(const ZZ &z) {
-    std::stringstream buffer;
-    buffer << z;
-    return buffer.str();
-}
-/*vector <string> RSA::cifrar(string mensaje)
-{
-    vector <string> mensaje_cifrado;
-    int posicion;
-    ZZ letra_cifrada;
+    string mensaje_cifrado, mensaje_temporal;
+    string letra_significativa = to_string(to_ZZ(alfabeto.length() - 1));
+    ZZ digitos_letra_significativa = to_ZZ(letra_significativa.length());
+    string digitos_N = to_string(N);
+    int bloques = digitos_N.length() - 1;
+    ZZ numero_letra;
+    string string_letra, string_letra_temp;
     for(int i = 0; i < mensaje.length(); i++)
     {
-        posicion = alfabeto.find(mensaje[i]);
-        letra_cifrada = potencia(to_ZZ(posicion), clave_publica, N);
-        mensaje_cifrado.push_back(letra_cifrada);
+        string_letra_temp = "";
+        numero_letra = alfabeto.find(mensaje[i]);
+        string_letra = to_string(numero_letra);
+        if(string_letra.length() < digitos_letra_significativa) //llenar con 0 si es que tiene menos digitos 2 -> 02
+        {
+            for(int i = 0; i < digitos_letra_significativa - string_letra.length(); i++)
+            {
+                string_letra_temp += "0";
+            }
+            string_letra_temp += string_letra;
+            mensaje_temporal += string_letra_temp;
+        }
+        else
+            mensaje_temporal += string_letra;
     }
-    for(int i = 0; i < mensaje_cifrado.size(); i++)
+    while(mensaje_temporal.length()%(bloques)!=0)
     {
-        cout << mensaje_cifrado[i] << ",";
+            mensaje_temporal += to_string(to_ZZ(alfabeto.find("#")));
+    }
+    string aux;
+    string string_letra_cifrada;
+    int count = 0;
+    for(int i = 0; i < mensaje_temporal.length(); i++)
+    {
+        aux += mensaje_temporal[i];
+        count += 1;
+        if(count == bloques)
+        {
+            ZZ letra_cifrada = string_toZZ(aux);
+            string_letra_cifrada = to_string(potencia(letra_cifrada, e, N));
+            if(string_letra_cifrada.length() < digitos_N.length())
+            {
+                for(int i = 0; i < digitos_N.length() - string_letra_cifrada.length(); i++)
+                {
+                    mensaje_cifrado += "0";
+                }
+                mensaje_cifrado += string_letra_cifrada;
+            }
+            else
+                mensaje_cifrado += string_letra_cifrada;
+            aux = "";
+            string_letra_cifrada = "";
+            count = 0;
+        }
     }
     return mensaje_cifrado;
-}*/
- string RSA::descifrar(vector <ZZ> mensaje)
+}
+string RSA::descifrar(string mensaje)
 {
     string mensaje_descifrado;
+    ZZ digitos_N = to_ZZ(to_string(N).length());
     ZZ posicion;
     int letra_cifrada;
     for(int i = 0; i < mensaje.size(); i++)
     {
         posicion = mensaje[i];
-        letra_cifrada = to_int(potencia(posicion, clave_privada, N));
+        letra_cifrada = to_int(potencia(posicion, d, N));
         mensaje_descifrado += alfabeto[letra_cifrada];
     }
     return mensaje_descifrado;

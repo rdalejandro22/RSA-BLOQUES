@@ -52,12 +52,12 @@ vector <ZZ> euclides_extendido(ZZ a, ZZ b)
     resultados.push_back(t1);
     return resultados;
 }
-ZZ inversa(ZZ a, ZZ alfabeto)
+ZZ inversa(ZZ a, ZZ n)
 {
-    ZZ x = euclides_extendido(a,alfabeto)[1];
+    ZZ x = euclides_extendido(a, n)[1];
     if(x<0)
     {
-        return modulo(x,alfabeto);
+        return modulo(x,n);
     }
     return x;
 }
@@ -73,4 +73,14 @@ ZZ potencia(ZZ a, ZZ b, ZZ modu)
         b = b/2;
     }
     return result;
+}
+string to_string(ZZ x)
+{
+    stringstream buffer;
+    buffer << x;
+    return buffer.str();
+}
+ZZ string_toZZ(string str){
+    ZZ x(INIT_VAL, str.c_str());
+    return x;
 }

@@ -12,6 +12,8 @@ using namespace NTL;
 int main()
 {
     srand(time(NULL));
-    ZZ a = ga(4,8,2,1);
-    cout << a;
+    RSA mango(to_ZZ(3), to_ZZ(1003));
+    string mensaje = "comehere#";
+    cout << mango.cifrar(mensaje);
+
 }

@@ -5,20 +5,17 @@
 #include <vector>
 #include <sstream>
 using namespace NTL;
+using namespace std;
 class RSA
 {
-    std::string alfabeto = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
-    ZZ clave_publica, clave_privada, N;
+    std::string alfabeto = "abcdefghijklmnopqrstuvwxyz# ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    ZZ e, d, N, p ,q;
     void generar_claves();
     public:
         RSA(ZZ e, ZZ n);
         RSA();
-        void set_n(ZZ n);
-        void set_clave_privada(ZZ key);
-        ZZ get_N();
-        ZZ get_clave_publica();
-        std::string zToString(const ZZ &z);
-        std::vector <ZZ> cifrar(std::string mensaje);
-        std::string descifrar(std::vector <ZZ> mensaje);
+        ZZ resto_chino(ZZ c);
+        string cifrar(string mensaje);
+        string descifrar(string mensaje);
 };
 #endif // RSA_H
