@@ -14,6 +14,11 @@ class RSA
     public:
         RSA(ZZ e, ZZ n);
         RSA();
+        void set_N(ZZ n);
+        void set_e(ZZ E);
+        void set_d(ZZ D);
+        void set_p(ZZ P);
+        void set_q(ZZ Q);
         ZZ resto_chino(ZZ c);
         string cifrar(string mensaje);
         string descifrar(string mensaje);

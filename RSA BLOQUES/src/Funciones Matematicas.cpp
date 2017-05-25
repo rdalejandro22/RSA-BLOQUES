@@ -61,7 +61,32 @@ ZZ inversa(ZZ a, ZZ n)
     }
     return x;
 }
-ZZ potencia(ZZ a, ZZ b, ZZ modu)
+vector <bool> ZZtoBinary(ZZ num)
+{
+    vector <bool> binario;
+    while(num>0)
+    {
+        binario.push_back(to_int(modulo(num,to_ZZ(2))));
+        num = num >> 1;
+    }
+    return binario;
+}
+ZZ potencia(ZZ a, ZZ b, ZZ n)
+{
+    ZZ d;
+    d = 1;
+    vector <bool> bin = ZZtoBinary(b);
+    for(int i = bin.size(); i > 0; i--)
+    {
+        d = modulo((d * d), n);
+        if(bin[i - 1] == 1)
+        {
+            d = modulo((d * a),n);
+        }
+    }
+    return d;
+}
+/*ZZ potencia(ZZ a, ZZ b, ZZ modu)
 {
     ZZ result = to_ZZ(1);
     ZZ n = to_ZZ(2);
@@ -73,7 +98,7 @@ ZZ potencia(ZZ a, ZZ b, ZZ modu)
         b = b/2;
     }
     return result;
-}
+}*/
 string to_string(ZZ x)
 {
     stringstream buffer;

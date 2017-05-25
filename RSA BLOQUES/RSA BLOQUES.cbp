@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -32,7 +34,13 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Funciones Matematicas.h" />
+		<Unit filename="include/PRNG.h" />
+		<Unit filename="include/RSA.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Funciones Matematicas.cpp" />
+		<Unit filename="src/PRNG.cpp" />
+		<Unit filename="src/RSA.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -10,7 +10,8 @@ ZZ euclides(ZZ a, ZZ b);
 ZZ mcd(ZZ a, ZZ b);
 vector <ZZ> euclides_extendido(ZZ a, ZZ b);
 ZZ inversa(ZZ a, ZZ alfabeto);
-ZZ potencia(ZZ a, ZZ b, ZZ modu);
+vector <bool> ZZtoBinary(ZZ num);
+ZZ potencia(ZZ a, ZZ b, ZZ n);
 string to_string(ZZ x);
 ZZ string_toZZ(string str);
 #endif // FUNCIONES MATEMATICAS_H

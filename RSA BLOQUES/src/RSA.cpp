@@ -40,6 +40,26 @@ RSA::RSA() //RECEPTOR
 {
     generar_claves();
 }
+void RSA::set_N(ZZ n)
+{
+    N = n;
+}
+void RSA::set_e(ZZ E)
+{
+    e = E;
+}
+void RSA::set_d(ZZ D)
+{
+    d = D;
+}
+void RSA::set_p(ZZ P)
+{
+    p = P;
+}
+void RSA::set_q(ZZ Q)
+{
+    q = Q;
+}
 ZZ RSA::resto_chino(ZZ c)
 {
     ZZ P = p * q;
@@ -114,15 +134,47 @@ string RSA::cifrar(string mensaje)
 }
 string RSA::descifrar(string mensaje)
 {
-    string mensaje_descifrado;
+    string mensaje_descifrado, mensaje_temporal;
     ZZ digitos_N = to_ZZ(to_string(N).length());
-    ZZ posicion;
-    int letra_cifrada;
+    string string_letra_sig = to_string(to_ZZ(alfabeto.length()-1));
+    ZZ digitos_letra_significativa = to_ZZ(string_letra_sig.length());
+    ZZ letra_descifrada;
+    string aux;
+    int count = 0;
     for(int i = 0; i < mensaje.size(); i++)
     {
-        posicion = mensaje[i];
-        letra_cifrada = to_int(potencia(posicion, d, N));
-        mensaje_descifrado += alfabeto[letra_cifrada];
+        aux += mensaje[i];
+        count += 1;
+        if(count == digitos_N)
+        {
+            letra_descifrada = resto_chino(string_toZZ(aux));
+            if(to_string(letra_descifrada).length() < digitos_N - 1)
+            {
+                for(int i = 0; i < digitos_N - to_string(letra_descifrada).length() - 1; i++)
+                {
+                    mensaje_temporal += "0";
+                }
+                mensaje_temporal += to_string(letra_descifrada);
+            }
+            else
+                mensaje_temporal += to_string(letra_descifrada);
+            aux = "";
+            count = 0;
+            letra_descifrada = 0;
+        }
+    }
+    ZZ letra_reemplazada;
+    for(int i = 0; i < mensaje_temporal.size(); i++)
+    {
+        aux += mensaje_temporal[i];
+        count += 1;
+        if(count == digitos_letra_significativa)
+        {
+            letra_reemplazada = string_toZZ(aux);
+            mensaje_descifrado += alfabeto[to_int(letra_reemplazada)];
+            count = 0;
+            aux = "";
+        }
     }
     return mensaje_descifrado;
 }
