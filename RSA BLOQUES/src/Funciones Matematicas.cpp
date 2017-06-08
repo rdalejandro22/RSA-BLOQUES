@@ -85,20 +85,22 @@ ZZ potencia(ZZ a, ZZ b, ZZ n)
         }
     }
     return d;
+
 }
-/*ZZ potencia(ZZ a, ZZ b, ZZ modu)
+ZZ raiz_primitiva(ZZ p)
 {
-    ZZ result = to_ZZ(1);
-    ZZ n = to_ZZ(2);
-    while(b != 0){
-        if(modulo(b,n)==1){
-            result = modulo((result * a),modu);
+    ZZ q, g;
+    q = (p - 1)/2;
+    for(int i = 1; i < p - 1; i++)
+    {
+        g = p - i;
+        if((potencia(g, to_ZZ(2), p) != 1) && (potencia(g, q, p) != 1))
+        {
+            break;
         }
-        a = modulo((a * a),modu);
-        b = b/2;
     }
-    return result;
-}*/
+    return q;
+}
 string to_string(ZZ x)
 {
     stringstream buffer;

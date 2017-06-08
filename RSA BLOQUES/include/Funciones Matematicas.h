@@ -12,6 +12,7 @@ vector <ZZ> euclides_extendido(ZZ a, ZZ b);
 ZZ inversa(ZZ a, ZZ alfabeto);
 vector <bool> ZZtoBinary(ZZ num);
 ZZ potencia(ZZ a, ZZ b, ZZ n);
+ZZ raiz_primitiva(ZZ p);
 string to_string(ZZ x);
 ZZ string_toZZ(string str);
 #endif // FUNCIONES MATEMATICAS_H

@@ -8,17 +8,18 @@ using namespace NTL;
 using namespace std;
 class RSA
 {
-    std::string alfabeto = "abcdefghijklmnopqrstuvwxyz# ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    string alfabeto = "abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.,;:-_()@{}+/";//"0123456789 abcdefghijklmnopqrstuvwxyz.,ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ZZ e, d, N, p ,q;
-    void generar_claves();
+    void generar_claves(int bits);
     public:
         RSA(ZZ e, ZZ n);
-        RSA();
+        RSA(int bits);
         void set_N(ZZ n);
         void set_e(ZZ E);
         void set_d(ZZ D);
         void set_p(ZZ P);
         void set_q(ZZ Q);
+        void get();
         ZZ resto_chino(ZZ c);
         string cifrar(string mensaje);
         string descifrar(string mensaje);
