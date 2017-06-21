@@ -29,14 +29,60 @@ void RSA::generar_claves(int bits)
     }
     d = inversa(e, phi_N);
 }
-RSA::RSA(ZZ e, ZZ n) //EMISOR
+string RSA::firmar(string firma)
 {
-    this->e = e;
-    N = n;
+    string firma_cifrada;
+    int digitos_N_r = obtener_digitos(N_r);
+    string bloque, string_potencia, aux, aux_2;
+    ZZ res_potencia;
+    for(int i = 0; i < firma.size(); i++)
+    {
+        res_potencia = potencia(to_ZZ(alfabeto.find(firma[i])), d, N);
+        string_potencia = to_string(res_potencia);
+        if(string_potencia.size() > (digitos_N_r - 1))
+        {
+            for(int i = 0; i < ((digitos_N_r - 1) - modulo(to_ZZ(string_potencia.size()), to_ZZ(digitos_N_r - 1))); i++)
+            {
+                bloque += '0';
+            }
+        }
+        bloque += string_potencia;
+    }
+    res_potencia = 0;
+    int count = 0;
+    for(int i = 0; i < bloque.size(); i++)
+    {
+        aux += bloque[i];
+        count++;
+        if(count == (digitos_N_r - 1))
+        {
+            res_potencia = potencia(string_toZZ(aux), e_r, N_r);
+            if(obtener_digitos(res_potencia) < digitos_N_r)
+            {
+                for(int i = 0; i < (digitos_N_r - obtener_digitos(res_potencia)); i++)
+                {
+                    aux_2 += '0';
+                }
+            }
+            aux_2 += to_string(res_potencia);
+            firma_cifrada += aux_2;
+            count = 0;
+            res_potencia = 0;
+            aux_2 = "";
+        }
+    }
+    return firma_cifrada;
+}
+RSA::RSA(int bits, ZZ e_r, ZZ N_receptor) //EMISOR
+{
+    generar_claves(bits);
+    this->e_r = e_r;
+    N_r = N_receptor;
 }
 RSA::RSA(int bits) //RECEPTOR
 {
     generar_claves(bits);
+
     ofstream claves;
     claves.open ("claves_mias.txt");
     claves << "e: " << e << endl;
@@ -71,16 +117,13 @@ void RSA::set_q(ZZ Q)
 {
     q = Q;
 }
-void RSA::get()
+ZZ RSA::get_e()
 {
-    ofstream claves;
-    claves.open ("get.txt");
-    claves << "e: " << e << endl;
-    claves << "d: " << d << endl;
-    claves << "N: " << N << endl;
-    claves << "p: " << p << endl;
-    claves << "q: " << q << endl;
-    claves.close();
+    return e;
+}
+ZZ RSA::get_n()
+{
+    return N;
 }
 ZZ RSA::resto_chino(ZZ c)
 {
@@ -96,11 +139,66 @@ ZZ RSA::resto_chino(ZZ c)
     ZZ d_0 = modulo(modulo((a_1 * p_1 * q_1), P) + modulo((a_2 * p_2 * q_2), P), P);
     return d_0;
 }
-string RSA::cifrar(string mensaje)
+string RSA::cifrar(string mensaje, string firma)
 {
-    string mensaje_cifrado, mensaje_temporal;
+    /*string firma_cifrada, firma_temporal;
     string letra_significativa = to_string(to_ZZ(alfabeto.length() - 1));
     ZZ digitos_letra_significativa = to_ZZ(letra_significativa.length());
+    string digitos_N_firma = to_string(N_f);
+    int bloques_firma = digitos_N_firma.length() - 1;
+    ZZ numero_letra_firma;
+    string string_letra_firma, string_letra_temp_firma;
+    for(int i = 0; i < firma.length(); i++)
+    {
+        string_letra_temp_firma = "";
+        numero_letra_firma = to_ZZ(alfabeto.find(mensaje[i]));
+        string_letra_firma = to_string(numero_letra_firma);
+        if(string_letra_firma.length() < digitos_letra_significativa) //llenar con 0 si es que tiene menos digitos 2 -> 02
+        {
+            for(int i = 0; i < digitos_letra_significativa - string_letra_firma.length(); i++)
+            {
+                string_letra_temp_firma += "0";
+            }
+            string_letra_temp_firma += string_letra_firma;
+            firma_temporal += string_letra_temp_firma;
+        }
+        else
+            firma_temporal += string_letra_firma;
+    }
+    while(firma_temporal.length() % (bloques_firma) != 0)
+    {
+            firma_temporal += to_string(to_ZZ(alfabeto.find("w")));
+    }
+    string aux_firma;
+    string string_letra_cifrada_firma;
+    int count = 0;
+    for(int i = 0; i < firma_temporal.length(); i++)
+    {
+        aux_firma += firma_temporal[i];
+        count += 1;
+        if(count == bloques_firma)
+        {
+            ZZ letra_cifrada = string_toZZ(aux_firma);
+            string_letra_cifrada_firma = to_string(potencia(letra_cifrada, d, N_f));
+            if(string_letra_cifrada_firma.length() < digitos_N_firma.length())
+            {
+                for(int i = 0; i < (digitos_N_firma.length() - string_letra_cifrada_firma.length()); i++)
+                {
+                    firma_cifrada += "0";
+                }
+                firma_cifrada += string_letra_cifrada_firma;
+            }
+            else
+                firma_cifrada += string_letra_cifrada_firma;
+            aux_firma = "";
+            string_letra_cifrada_firma = "";
+            count = 0;
+        }
+    }
+
+
+    string mensaje_cifrado, mensaje_temporal;
+    mensaje += firma_cifrada;
     string digitos_N = to_string(N);
     int bloques = digitos_N.length() - 1;
     ZZ numero_letra;
@@ -128,7 +226,7 @@ string RSA::cifrar(string mensaje)
     }
     string aux;
     string string_letra_cifrada;
-    int count = 0;
+    count = 0;
     for(int i = 0; i < mensaje_temporal.length(); i++)
     {
         aux += mensaje_temporal[i];
@@ -152,14 +250,14 @@ string RSA::cifrar(string mensaje)
             count = 0;
         }
     }
-    return mensaje_cifrado;
+    return mensaje_cifrado;*/
 }
-string RSA::descifrar(string mensaje)
+string RSA::descifrar(string mensaje, ZZ e_firma, ZZ N_firma)
 {
     string mensaje_descifrado, mensaje_temporal;
-    ZZ digitos_N = to_ZZ(to_string(N).length());
+    int digitos_N = to_string(N).length();
     string string_letra_sig = to_string(to_ZZ(alfabeto.length()-1));
-    ZZ digitos_letra_significativa = to_ZZ(string_letra_sig.length());
+    int digitos_letra_significativa = string_letra_sig.length();
     ZZ letra_descifrada;
     string aux;
     int count = 0;
@@ -193,12 +291,59 @@ string RSA::descifrar(string mensaje)
         if(count == digitos_letra_significativa)
         {
             letra_reemplazada = string_toZZ(aux);
-            cout << "Esta es la letra: " << aux << endl;
             mensaje_descifrado += alfabeto[to_int(letra_reemplazada)];
             count = 0;
             aux = "";
         }
     }
+    aux = "";
+    mensaje_temporal = "";
+    count = 0;
+    string mensaje_descifrado_firma;
+    ZZ letra_descifrada_firma;
+    int digitos_N_firma = to_string(N_firma).length();
+    for(int i = mensaje_descifrado.length() - digitos_N; i < mensaje_descifrado.length(); i++)
+    {
+        cout << mensaje_descifrado[i] << endl;
+        /*aux += mensaje_descifrado[i];
+        count += 1;
+        if(count == digitos_N_firma)
+        {
+            letra_descifrada_firma = potencia(string_toZZ(aux), e_firma, N_firma);
+            if(to_string(letra_descifrada_firma).length() < digitos_N_firma - 1)
+            {
+                for(int i = 0; i < digitos_N_firma - to_string(letra_descifrada_firma).length() - 1; i++)
+                {
+                    mensaje_temporal += "0";
+                }
+                mensaje_temporal += to_string(letra_descifrada_firma);
+            }
+            else
+                mensaje_temporal += to_string(letra_descifrada_firma);
+            aux = "";
+            count = 0;
+            letra_descifrada_firma = 0;
+        }*/
+    }
+    cout << endl;
+    cout << endl;
+    /*cout << mensaje_temporal << endl;
+    aux = "";
+    count = 0;
+    ZZ letra_reemplazada_firma;
+    for(int i = 0; i < mensaje_temporal.size(); i++)
+    {
+        aux += mensaje_temporal[i];
+        count += 1;
+        if(count == digitos_letra_significativa)
+        {
+            letra_reemplazada_firma = string_toZZ(aux);
+            mensaje_descifrado_firma += alfabeto[to_int(letra_reemplazada_firma)];
+            count = 0;
+            aux = "";
+        }
+    }
+    cout << mensaje_descifrado_firma << endl;*/
     return mensaje_descifrado;
 }
 

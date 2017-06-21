@@ -44,10 +44,10 @@
 1495702981 source:c:\users\alejandro\desktop\rsa bloques\src\funciones matematicas.cpp
 	"Funciones Matematicas.h"
 
-1495736918 source:e:\rsa bloques\src\funciones matematicas.cpp
+1496946472 source:e:\rsa bloques\src\funciones matematicas.cpp
 	"Funciones Matematicas.h"
 
-1495703030 e:\rsa bloques\include\funciones matematicas.h
+1496806226 e:\rsa bloques\include\funciones matematicas.h
 	<vector>
 	<sstream>
 	<NTL/ZZ.h>
@@ -64,7 +64,7 @@
 	<vector>
 	<NTL/ZZ.h>
 
-1495903806 source:e:\rsa bloques\src\rsa.cpp
+1497501752 source:e:\rsa bloques\src\rsa.cpp
 	"RSA.h"
 	<fstream>
 	"PRNG.h"
@@ -74,31 +74,25 @@
 	<NTL/ZZ.h>
 	"Funciones Matematicas.h"
 
-1496339174 e:\rsa bloques\include\rsa.h
+1497501416 e:\rsa bloques\include\rsa.h
 	<string>
 	<NTL/ZZ.h>
 	<vector>
 	<sstream>
 
-1496342212 source:e:\rsa bloques\main.cpp
-	<iostream>
-	"Funciones Matematicas.h"
-	"PRNG.h"
-	<NTL/ZZ.h>
-	<fstream>
-	<iostream>
-	<NTL/ZZ.h>
-	<string>
-	"RSA.h"
-	<time.h>
-
-1496893558 source:h:\rsa bloques\main.cpp
+1497551110 source:e:\rsa bloques\main.cpp
 	"ElGamal.h"
 	"Funciones Matematicas.h"
 	"RSA.h"
 	<time.h>
 
-1496806226 h:\rsa bloques\include\funciones matematicas.h
+1498022692 source:h:\rsa bloques\main.cpp
+	"ElGamal.h"
+	"Funciones Matematicas.h"
+	"RSA.h"
+	<time.h>
+
+1498008322 h:\rsa bloques\include\funciones matematicas.h
 	<vector>
 	<sstream>
 	<NTL/ZZ.h>
@@ -107,13 +101,13 @@
 	<vector>
 	<NTL/ZZ.h>
 
-1496806226 h:\rsa bloques\include\rsa.h
+1498022402 h:\rsa bloques\include\rsa.h
 	<string>
 	<NTL/ZZ.h>
 	<vector>
 	<sstream>
 
-1496806308 source:h:\rsa bloques\src\funciones matematicas.cpp
+1498008322 source:h:\rsa bloques\src\funciones matematicas.cpp
 	"Funciones Matematicas.h"
 
 1495685860 source:h:\rsa bloques\src\prng.cpp
@@ -124,7 +118,7 @@
 	<stdlib.h>
 	<math.h>
 
-1496891508 source:h:\rsa bloques\src\rsa.cpp
+1498022996 source:h:\rsa bloques\src\rsa.cpp
 	"RSA.h"
 	<fstream>
 	"PRNG.h"
@@ -218,12 +212,23 @@
 	<vector>
 	<sstream>
 
-1496893248 source:h:\rsa bloques\src\elgamal.cpp
+1497549118 source:h:\rsa bloques\src\elgamal.cpp
 	"ElGamal.h"
 
-1496893512 h:\rsa bloques\include\elgamal.h
+1497551738 h:\rsa bloques\include\elgamal.h
 	"Funciones Matematicas.h"
 	"PRNG.h"
 	"vector"
 	"fstream"
+	"string.h"
+
+1497549118 source:e:\rsa bloques\src\elgamal.cpp
+	"ElGamal.h"
+
+1497551738 e:\rsa bloques\include\elgamal.h
+	"Funciones Matematicas.h"
+	"PRNG.h"
+	"vector"
+	"fstream"
+	"string.h"
 

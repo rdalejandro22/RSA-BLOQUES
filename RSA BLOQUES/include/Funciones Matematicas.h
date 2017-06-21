@@ -15,4 +15,5 @@ ZZ potencia(ZZ a, ZZ b, ZZ n);
 ZZ raiz_primitiva(ZZ p);
 string to_string(ZZ x);
 ZZ string_toZZ(string str);
+int obtener_digitos(ZZ num);
 #endif // FUNCIONES MATEMATICAS_H

@@ -111,3 +111,8 @@ ZZ string_toZZ(string str){
     ZZ x(INIT_VAL, str.c_str());
     return x;
 }
+int obtener_digitos(ZZ num)
+{
+    string s_num = to_string(num);
+    return s_num.size();
+}

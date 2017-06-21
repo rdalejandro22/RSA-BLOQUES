@@ -1,25 +1,27 @@
 #include "ElGamal.h"
 void ElGamal::generar_claves_receptor(int bits)
 {
-    P = ga(bits/4, bits, 20, 3);
-    while(ProbPrime(P, 10) != 1)
+    ZZ q;
+    q = ga(100, bits, 7, 3);
+    while(ProbPrime(q, 10) != 1)
     {
-        P = ga(bits/4, bits, 20, 3);
+        q = ga(100, bits, 7, 3);
     }
+    P = (2 * q) + 1;
     e_1 = raiz_primitiva(P);
-    d = ga(bits/4, bits, 20, 3);
-    while((d > (P - 2)) && (d < 2))
+    d = ga(100, bits, 7, 3);
+    while(d >= (P-2))
     {
-        d = ga(bits/4, bits, 20, 3);
+        d = ga(100, bits, 7, 3);
     }
     e_2 = potencia(e_1, d, P);
 }
 ElGamal::ElGamal(ZZ e_1, ZZ e_2, ZZ P, int bits)
 {
-    r = ga(bits/4, bits, 20, 3);
-    while((r < 2) && (r > P - 2))
+    r = ga(100, bits, 7, 3);
+    while((r < 2) && (r > (P - 2)))
     {
-        r = ga(bits/4, bits, 20, 3);;
+        r = ga(100, bits, 7, 3);
     }
     C = potencia(e_1, r, P);
     K = potencia(e_2, r, P);
@@ -69,10 +71,20 @@ void ElGamal::set_P(ZZ P)
 string ElGamal::cifrar(string mensaje)
 {
     string mensaje_cifrado, mensaje_temporal;
+    string c1 = to_string(C);
+    string digitos_P = to_string(P);
+    if(c1.length() < digitos_P.size())
+    {
+        for(int i = 0; i < digitos_P.size() - c1.size(); i++)
+        {
+            c1 += "0";
+        }
+    }
+    mensaje_cifrado += c1;
     string letra_significativa = to_string(to_ZZ(alfabeto.length() - 1));
     ZZ digitos_letra_significativa = to_ZZ(letra_significativa.length());
-    string digitos_P = to_string(P);
-    int bloques = digitos_P.length();
+    string digitos_N = to_string(P);
+    int bloques = digitos_N.length() - 1;
     ZZ numero_letra;
     string string_letra, string_letra_temp;
     for(int i = 0; i < mensaje.length(); i++)
@@ -107,9 +119,9 @@ string ElGamal::cifrar(string mensaje)
         {
             ZZ letra_cifrada = string_toZZ(aux);
             string_letra_cifrada = to_string(modulo((letra_cifrada * K), P));
-            if(string_letra_cifrada.length() < digitos_P.length())
+            if(string_letra_cifrada.length() < digitos_N.length())
             {
-                for(int i = 0; i < (digitos_P.length() - string_letra_cifrada.length()); i++)
+                for(int i = 0; i < (digitos_N.length() - string_letra_cifrada.length()); i++)
                 {
                     mensaje_cifrado += "0";
                 }
@@ -123,28 +135,36 @@ string ElGamal::cifrar(string mensaje)
         }
     }
     return mensaje_cifrado;
+
 }
-string ElGamal::descifrar(ZZ C_1, string mensaje)
+string ElGamal::descifrar(string mensaje)
 {
+    string digitos_P = to_string(P);
+    string c_string;
+    for(int i = 0; i < digitos_P.size(); i++)
+    {
+        c_string += mensaje[i];
+    }
+    ZZ C_1 = string_toZZ(c_string);
     K = potencia(C_1, d, P);
     ZZ InversaK = inversa(K, P);
     string mensaje_descifrado, mensaje_temporal;
-    ZZ digitos_P = to_ZZ(to_string(P).length());
+    ZZ digitos_N = to_ZZ(to_string(P).length());
     string string_letra_sig = to_string(to_ZZ(alfabeto.length()-1));
     ZZ digitos_letra_significativa = to_ZZ(string_letra_sig.length());
     ZZ letra_descifrada;
     string aux;
     int count = 0;
-    for(int i = 0; i < mensaje.size(); i++)
+    for(int i = digitos_P.size(); i < mensaje.size(); i++)
     {
         aux += mensaje[i];
         count += 1;
-        if(count == digitos_P)
+        if(count == digitos_N)
         {
-            letra_descifrada = modulo((string_toZZ(aux)*InversaK), P);
-            if(to_string(letra_descifrada).length() < digitos_P)
+            letra_descifrada = modulo((string_toZZ(aux)*InversaK), P);;
+            if(to_string(letra_descifrada).length() < digitos_N - 1)
             {
-                for(int i = 0; i < digitos_P - to_string(letra_descifrada).length(); i++)
+                for(int i = 0; i < digitos_N - to_string(letra_descifrada).length() - 1; i++)
                 {
                     mensaje_temporal += "0";
                 }

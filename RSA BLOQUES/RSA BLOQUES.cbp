@@ -36,12 +36,14 @@
 		</Compiler>
 		<Linker>
 			<Add option="-lntl" />
-			<Add library="C:\Program Files (x86)\CodeBlocks\MinGW\lib\libntl.a" />
+			<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/lib/libntl.a" />
 		</Linker>
+		<Unit filename="include/ElGamal.h" />
 		<Unit filename="include/Funciones Matematicas.h" />
 		<Unit filename="include/PRNG.h" />
 		<Unit filename="include/RSA.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/ElGamal.cpp" />
 		<Unit filename="src/Funciones Matematicas.cpp" />
 		<Unit filename="src/PRNG.cpp" />
 		<Unit filename="src/RSA.cpp" />
